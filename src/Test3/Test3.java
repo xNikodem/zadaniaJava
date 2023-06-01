@@ -17,7 +17,7 @@ public class Test3 {
 
         try {
             String birthDate = Zadanie1.getBirthDateFromPesel();
-            System.out.println("Data urodzenia (w formacie YYMMDD): " + birthDate.substring(0, 6));
+            System.out.println("Data urodzenia (w formacie DD/MM/YYYY): " + birthDate);
         } catch (InvalidPeselException e) {
             e.printStackTrace();
         }

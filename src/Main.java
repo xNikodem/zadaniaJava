@@ -5,7 +5,7 @@ import Test3.Test3;
 public class Main {
     public static void main(String[] args) {
         //ustaw na sztywno numer testu z którego zadania chcesz wywołać
-        testSelector(1);
+        testSelector(3);
     }
     private static void testSelector(int i) {
         switch (i) {

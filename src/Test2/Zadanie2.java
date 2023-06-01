@@ -1,7 +1,8 @@
 package Test2;
 
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
@@ -11,39 +12,29 @@ import java.util.Map;
 
 public class Zadanie2 {
 
-    public static Map<DayOfWeek, Integer> countFilesCreationDay(String directory) throws IOException {
-        Path startPath = Paths.get(directory);
-        FileCreationDayCounter counter = new FileCreationDayCounter();
-        Files.walkFileTree(startPath, counter);
-        return counter.dayOfWeekCountMap;
+    private Map<DayOfWeek, Integer> dayOfWeekCountMap = new HashMap<>();
+
+    public Map<DayOfWeek, Integer> countFilesCreationDay(String directory) throws IOException {
+        File dir = new File(directory);
+        countFilesCreationDay(dir);
+        return dayOfWeekCountMap;
     }
 
-    private static class FileCreationDayCounter extends SimpleFileVisitor<Path> {
-        private Map<DayOfWeek, Integer> dayOfWeekCountMap = new HashMap<>();
+    private void countFilesCreationDay(File directory) throws IOException {
+        File[] files = directory.listFiles();
 
-        @Override
-        public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-            return dir.getFileName().toString().equals("node_modules") ? FileVisitResult.SKIP_SUBTREE : FileVisitResult.CONTINUE;
-        }
-
-        @Override
-        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-            String fileName = file.toString();
-            if (fileName.endsWith(".java") || fileName.endsWith(".ts") || fileName.endsWith(".html") || fileName.endsWith(".css")) {
-                DayOfWeek dayOfWeek = getCreationDayOfWeek(file);
-                dayOfWeekCountMap.put(dayOfWeek, dayOfWeekCountMap.getOrDefault(dayOfWeek, 0) + 1);
+        if (files != null) {
+            for (File file : files) {
+                if (file.isDirectory() && !file.getName().equals("node_modules")) {
+                    countFilesCreationDay(file);
+                } else if (file.getName().endsWith(".java") || file.getName().endsWith(".ts") ||
+                        file.getName().endsWith(".html") || file.getName().endsWith(".css")) {
+                    BasicFileAttributes attrs = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
+                    DayOfWeek dayOfWeek = LocalDateTime.ofInstant(attrs.creationTime().toInstant(), ZoneId.systemDefault()).getDayOfWeek();
+                    dayOfWeekCountMap.put(dayOfWeek, dayOfWeekCountMap.getOrDefault(dayOfWeek, 0) + 1);
+                }
             }
-            return FileVisitResult.CONTINUE;
-        }
-
-        private DayOfWeek getCreationDayOfWeek(Path file) throws IOException {
-            BasicFileAttributes attrs = Files.readAttributes(file, BasicFileAttributes.class);
-            return LocalDateTime.ofInstant(attrs.creationTime().toInstant(), ZoneId.systemDefault()).getDayOfWeek();
-        }
-
-        @Override
-        public FileVisitResult visitFileFailed(Path file, IOException exc) {
-            return FileVisitResult.CONTINUE;
         }
     }
 }
+

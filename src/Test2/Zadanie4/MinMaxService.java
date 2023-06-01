@@ -8,20 +8,14 @@ public class MinMaxService {
             throw new IllegalArgumentException("List cannot be null or empty");
         }
 
-        T min = elements.get(0);
-        T max = elements.get(0);
+        T min = elements.stream()
+                .min(Comparable::compareTo)
+                .orElseThrow(() -> new RuntimeException("Cannot find min value"));
 
-        for (T element : elements) {
-            if (element.compareTo(min) < 0) {
-                min = element;
-            }
-
-            if (element.compareTo(max) > 0) {
-                max = element;
-            }
-        }
+        T max = elements.stream()
+                .max(Comparable::compareTo)
+                .orElseThrow(() -> new RuntimeException("Cannot find max value"));
 
         return new MinMax<>(min, max);
     }
 }
-

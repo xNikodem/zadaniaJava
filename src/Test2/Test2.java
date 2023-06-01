@@ -13,23 +13,20 @@ import java.util.Map;
 public class Test2 {
     public static void zadanie1(){
         String directory = "C:\\Users\\nikob\\IdeaProjects";
-        try {
-            File largestJavaFile = Zadanie1.findLargestJavaFile(directory);
-            if (largestJavaFile != null) {
-                System.out.println("Największy plik Java znajduje się pod ścieżką: " + largestJavaFile.getPath());
-                System.out.println("Rozmiar pliku: " + largestJavaFile.length() / 1024 + " kilobajtów");
-            } else {
-                System.out.println("Nie znaleziono plików Java w podanym katalogu.");
-            }
-        } catch (IOException e) {
-            System.out.println("Błąd podczas przeszukiwania katalogu: " + e.getMessage());
+        File largestJavaFile = Zadanie1.findLargestJavaFile(directory);
+        if (largestJavaFile != null) {
+            System.out.println("Największy plik Java znajduje się pod ścieżką: " + largestJavaFile.getPath());
+            System.out.println("Rozmiar pliku: " + largestJavaFile.length() / 1024 + " kilobajtów");
+        } else {
+            System.out.println("Nie znaleziono plików Java w podanym katalogu.");
         }
     }
 
     public static void zadanie2(){
         String directory = "C:\\Users\\nikob\\IdeaProjects";
         try {
-            Map<DayOfWeek, Integer> dayOfWeekCountMap = Zadanie2.countFilesCreationDay(directory);
+            Zadanie2 counter = new Zadanie2();
+            Map<DayOfWeek, Integer> dayOfWeekCountMap = counter.countFilesCreationDay(directory);
             for (DayOfWeek dayOfWeek : DayOfWeek.values()) {
                 System.out.println(dayOfWeek + ": " + dayOfWeekCountMap.getOrDefault(dayOfWeek, 0));
             }
@@ -37,6 +34,7 @@ public class Test2 {
             System.out.println("Błąd podczas przeszukiwania katalogu: " + e.getMessage());
         }
     }
+
     /*
     * Zadanie 2:
         MONDAY: 38
